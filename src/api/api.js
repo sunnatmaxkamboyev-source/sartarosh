@@ -41,3 +41,7 @@ export const adminLogin = (phone, password) =>
     body: { phone, password },
     auth: false,
   });
+
+
+  export const getMyBookings = (tokens) =>
+  request("/bookings/mine", { method: "POST", body: { tokens }, auth: false });

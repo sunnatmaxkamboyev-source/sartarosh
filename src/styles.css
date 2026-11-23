@@ -1109,3 +1109,58 @@ button:disabled {
 .tg-status.off {
   color: var(--muted);
 }
+
+
+
+
+/* ---------- Mening bronlarim ---------- */
+.shell {
+  flex-direction: column;
+  gap: 16px;
+}
+
+.my-bookings {
+  width: 100%;
+  max-width: 1080px;
+  background: #fff;
+  border: 1px solid #e8eded;
+  border-radius: 20px;
+  padding: 18px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.my-bookings-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.my-booking {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 10px 0;
+  border-top: 1px solid #eef2f2;
+  font-size: 14px;
+}
+
+.my-bookings-title + .my-booking {
+  border-top: none;
+}
+
+.my-booking-when {
+  min-width: 190px;
+}
+
+.my-booking-services {
+  flex: 1;
+  color: #4b5555;
+}
+
+.my-booking.cancelled .my-booking-when,
+.my-booking.cancelled .my-booking-services {
+  text-decoration: line-through;
+  color: var(--muted);
+}

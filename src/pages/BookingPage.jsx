@@ -4,9 +4,11 @@ import Sidebar from "../components/Sidebar.jsx";
 import DateTimePage from "./DateTimePage.jsx";
 import DetailsForm from "../components/DetailsForm.jsx";
 import SuccessScreen from "../components/SuccessScreen.jsx";
+import MyBookings from "../components/MyBookings.jsx";
 import { MONTHS } from "../config.js";
 import { slotRange, toDateKey } from "../utils/date.js";
 import { createBooking } from "../api/api.js";
+import { addMyToken } from "../utils/myBookings.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function BookingPage() {
@@ -47,6 +49,8 @@ export default function BookingPage() {
         time,
         ...formData,
       });
+      // Saytga qaytganda bronini ko'rsatish uchun kodni eslab qolamiz
+      addMyToken(booking.viewToken);
       setTelegramLink(booking.telegramLink || "");
       setDone(true);
     } catch (err) {
@@ -90,6 +94,7 @@ export default function BookingPage() {
   return (
     <div className="shell">
       {adminLink}
+      {!showDetails && <MyBookings />}
       <div className="card">
         <Sidebar
           step={step}
