@@ -45,3 +45,17 @@ export const adminLogin = (phone, password) =>
 
   export const getMyBookings = (tokens) =>
   request("/bookings/mine", { method: "POST", body: { tokens }, auth: false });
+
+
+  export const cancelMyBooking = (token) =>
+  request("/bookings/mine/cancel", {
+    method: "POST",
+    body: { token },
+    auth: false,
+  });
+
+export const deleteBooking = (id) =>
+  request(`/bookings/${id}`, { method: "DELETE" });
+
+export const clearPastBookings = () =>
+  request("/bookings/past", { method: "DELETE" });

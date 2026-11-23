@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getBookings, setBookingStatus } from "../../api/api.js";
+import {
+  clearPastBookings,
+  deleteBooking,
+  getBookings,
+  setBookingStatus,
+} from "../../api/api.js";
 import { formatPhone } from "../../utils/phone.js";
 import { slotRange, toDateKey } from "../../utils/date.js";
 
@@ -39,6 +44,7 @@ export default function BookingsTab() {
   const [customDate, setCustomDate] = useState("");
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
 
   const load = () =>
     getBookings()
@@ -51,8 +57,42 @@ export default function BookingsTab() {
 
   const changeStatus = async (id, newStatus) => {
     setError("");
+    setInfo("");
     try {
       await setBookingStatus(id, newStatus);
+    } catch (err) {
+      setError(err.message);
+    }
+    load();
+  };
+
+  const handleDelete = async (booking) => {
+    if (!window.confirm(`${booking.name} ning broni o'chirilsinmi?`)) return;
+    setError("");
+    setInfo("");
+    try {
+      await deleteBooking(booking.id);
+    } catch (err) {
+      setError(err.message);
+    }
+    load();
+  };
+
+  const today = toDateKey(new Date());
+  const pastCount = bookings.filter((b) => b.date < today).length;
+
+  const handleClearPast = async () => {
+    if (
+      !window.confirm(
+        `Bugundan oldingi ${pastCount} ta bron o'chiriladi. Davom etasizmi?`
+      )
+    )
+      return;
+    setError("");
+    setInfo("");
+    try {
+      const result = await clearPastBookings();
+      setInfo(`${result.deleted} ta bron o'chirildi`);
     } catch (err) {
       setError(err.message);
     }
@@ -95,6 +135,16 @@ export default function BookingsTab() {
 
   return (
     <div className="panel">
+      <div className="panel-actions">
+        <button
+          className="btn-small danger"
+          onClick={handleClearPast}
+          disabled={pastCount === 0}
+        >
+          O'tgan bronlarni tozalash ({pastCount})
+        </button>
+      </div>
+
       <div className="toolbar">
         <input
           className="input"
@@ -136,6 +186,7 @@ export default function BookingsTab() {
       </div>
 
       {error && <div className="error-text">{error}</div>}
+      {info && <div className="success-note">{info}</div>}
 
       <div className="results-count">Topildi: {shown.length} ta</div>
 
@@ -169,22 +220,31 @@ export default function BookingsTab() {
               <div className="booking-total">
                 {total.toLocaleString("ru-RU")} so'm
               </div>
-              {b.status === "new" && (
-                <div className="booking-actions">
-                  <button
-                    className="btn-small"
-                    onClick={() => changeStatus(b.id, "done")}
-                  >
-                    Bajarildi
-                  </button>
+              <div className="booking-actions">
+                {b.status === "new" ? (
+                  <>
+                    <button
+                      className="btn-small"
+                      onClick={() => changeStatus(b.id, "done")}
+                    >
+                      Bajarildi
+                    </button>
+                    <button
+                      className="btn-small danger"
+                      onClick={() => changeStatus(b.id, "cancelled")}
+                    >
+                      Bekor qilish
+                    </button>
+                  </>
+                ) : (
                   <button
                     className="btn-small danger"
-                    onClick={() => changeStatus(b.id, "cancelled")}
+                    onClick={() => handleDelete(b)}
                   >
-                    Bekor qilish
+                    O'chirish
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         );

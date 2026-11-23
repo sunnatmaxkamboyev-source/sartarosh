@@ -1164,3 +1164,36 @@ button:disabled {
   text-decoration: line-through;
   color: var(--muted);
 }
+
+
+
+
+
+
+/* ---------- Bekor qilish / o'chirish ---------- */
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.btn-small:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-small:disabled:hover {
+  background: transparent;
+  color: inherit;
+}
+
+.my-booking-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.my-bookings .error-text {
+  margin-top: 8px;
+}
